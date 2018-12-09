@@ -1,12 +1,12 @@
 <!doctype html>
-<html ng-app="myApp"> 
-    
+<html ng-app="myApp">
+
 <head>
     <title>User Login and Sessions</title>
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
-        
-<body>  
+
+<body>
     <div ng-controller="myController">
         <h2 id="welcomeText">Welcome. You are Logged In as
             <%= username %>
@@ -25,8 +25,45 @@
     Color
         <%= color %>
       </span>
+    <script type="text/javascript">
+        var map, infoWindow, location;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 40.233845, lng: -111.658531 },
+                zoom: 11
+            });
+            infoWindow = new google.maps.InfoWindow;
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitute
+                    }
+                    infoWindow.setPosition(location);
+                    infoWindow.setContent('Location found');
+                    infoWindow.open(map);
+                    map.setCenter(location);
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            }
+            else {
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, location) {
+            infoWindow.setPosition(location);
+            infoWindow.setContent(browserHasGeolocation ?
+                "Error: The Geolocation service failed. Please enable location services" :
+                "Error: Your browser doesn\'t support geolocation.")
+            infoWindow.open(map);
+        }
+    </script>
+    <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJdjJdhsUi4AM9lpSyKsb-L-iZf1YO0PQ&callback=initMap"></script>
     <script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
     <script src="/javascripts/my_app.js"></script>
 </body>
-      
+
 </html>
