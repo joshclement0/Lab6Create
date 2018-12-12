@@ -7,15 +7,37 @@
 </head>
 
 <body>
+    <style>
+        #map{
+            height:300px;
+            width:80%;
+        }
+    </style>
     <div ng-controller="myController">
         <h2 id="welcomeText">Welcome. You are Logged In as
             <%= username %>
         </h2>
         <a id="logoutLink" href="/logout">logout</a>
         <a id="editLink" href="/user">Edit User</a>
-        <p>Place Your Code Here
-            <p>
+    
+    <div class="input">
+        My location <a href="https://mycurrentlocation.net/" target="_blank">Lookup my location</a>
+        <form>
+            Latitude:<input type='number' id='lat'>
+            Longitute:<input type="number" id="long" onkeyup="changeLocation()">
+        </form>
+        <form>
+            Destination:<select id="goto">
+                <option value="slc">Salt Lake City</option>
+                <option value="stg">St George</option>
+                <option value="ogd">Ogden</option>
+                <option value="log">Logan</option>
+                <option value="mur">Murray</option>
+            </select>
+            <button type="submit" onclick="submitDest()">Submit</button>
+        </form>
     </div>
+    <div id="map"></div></div>
     <hr>
     <span id="indexMsg">
         <%= msg %>
@@ -26,40 +48,38 @@
         <%= color %>
       </span>
     <script type="text/javascript">
-        var map, infoWindow, location;
-
+        var destination=document.getElementById("goto").value;
+        var people=[];
+        var here={
+            lat:40.23,
+            lng:-111.65
+        };
+        function submitDest(){
+            destination=document.getElementById("goto").value;
+            console.log("connect to firebase");
+            //put all names with the same destination into the people array
+            //and add me if i'm not there
+        }
+        function changeLocation(){
+            here={
+                lat:Number(document.getElementById('lat').value),
+                lng:Number(document.getElementById('long').value)
+            };
+            console.log(here);
+            initMap();
+        }
         function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 40.233845, lng: -111.658531 },
-                zoom: 11
-            });
-            infoWindow = new google.maps.InfoWindow;
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    location = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitute
-                    }
-                    infoWindow.setPosition(location);
-                    infoWindow.setContent('Location found');
-                    infoWindow.open(map);
-                    map.setCenter(location);
-                }, function() {
-                    handleLocationError(true, infoWindow, map.getCenter());
-                });
+            console.log("attempting code");
+            
+            var map=new google.maps.Map(
+                document.getElementById('map'),{zoom:11,center:here});
+            var marker = new google.maps.Marker({position:here,map:map}); 
+            for (i in people){
+                marker=new google.maps.Marker({position:people[i].position,map:map});
             }
-            else {
-                handleLocationError(false, infoWindow, map.getCenter());
-            }
+            console.log(marker);
         }
-
-        function handleLocationError(browserHasGeolocation, infoWindow, location) {
-            infoWindow.setPosition(location);
-            infoWindow.setContent(browserHasGeolocation ?
-                "Error: The Geolocation service failed. Please enable location services" :
-                "Error: Your browser doesn\'t support geolocation.")
-            infoWindow.open(map);
-        }
+        
     </script>
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJdjJdhsUi4AM9lpSyKsb-L-iZf1YO0PQ&callback=initMap"></script>
     <script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
