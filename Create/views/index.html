@@ -2,15 +2,34 @@
 <html ng-app="myApp">
 
 <head>
-    <title>User Login and Sessions</title>
+    <title>Carpool</title>
+    <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBzJikzQR4b_zCUN0Q39b5o0rJ_4xuSdyg",
+            authDomain: "carpool-19d8a.firebaseapp.com",
+            databaseURL: "https://carpool-19d8a.firebaseio.com",
+            projectId: "carpool-19d8a",
+            storageBucket: "",
+            messagingSenderId: "19345431130"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+    <!-- Your Javascript -->
+    <script src="javascripts/my_app.js"></script>
+
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
 
 <body>
     <style>
-        #map{
-            height:300px;
-            width:80%;
+        #map {
+            height: 300px;
+            width: 80%;
         }
     </style>
     <div ng-controller="myController">
@@ -19,25 +38,26 @@
         </h2>
         <a id="logoutLink" href="/logout">logout</a>
         <a id="editLink" href="/user">Edit User</a>
-    
-    <div class="input">
-        My location <a href="https://mycurrentlocation.net/" target="_blank">Lookup my location</a>
-        <form>
-            Latitude:<input type='number' id='lat'>
-            Longitute:<input type="number" id="long" onkeyup="changeLocation()">
-        </form>
-        <form>
-            Destination:<select id="goto">
+
+        <div class="input">
+            My location <a href="https://mycurrentlocation.net/" target="_blank">Lookup my location</a>
+            <form>
+                Latitude:<input type='number' id='lat'> Longitute:
+                <input type="number" id="long" onkeyup="changeLocation()">
+            </form>
+            <form>
+                Destination:<select id="goto">
                 <option value="slc">Salt Lake City</option>
                 <option value="stg">St George</option>
                 <option value="ogd">Ogden</option>
                 <option value="log">Logan</option>
                 <option value="mur">Murray</option>
             </select>
-            <button type="submit" onclick="submitDest()">Submit</button>
-        </form>
+                <button type="submit" onclick="submitDest()">Submit</button>
+            </form>
+        </div>
+        <div id="map"></div>
     </div>
-    <div id="map"></div></div>
     <hr>
     <span id="indexMsg">
         <%= msg %>
@@ -48,38 +68,41 @@
         <%= color %>
       </span>
     <script type="text/javascript">
-        var destination=document.getElementById("goto").value;
-        var people=[];
-        var here={
-            lat:40.23,
-            lng:-111.65
+        var destination = document.getElementById("goto").value;
+        var people = [{name:"phill",position:{lat:40.232,lng:-111.64}},{name:"William",position:{lat:40.23,lng:-111.652}},{name:"steve",position:{lat:40.231,lng:-111.6396}}];
+        var here = {
+            lat: 40.23,
+            lng: -111.65
         };
-        function submitDest(){
-            destination=document.getElementById("goto").value;
+
+        function submitDest() {
+            destination = document.getElementById("goto").value;
             console.log("connect to firebase");
             //put all names with the same destination into the people array
             //and add me if i'm not there
         }
-        function changeLocation(){
-            here={
-                lat:Number(document.getElementById('lat').value),
-                lng:Number(document.getElementById('long').value)
+
+        function changeLocation() {
+            here = {
+                lat: Number(document.getElementById('lat').value),
+                lng: Number(document.getElementById('long').value)
             };
             console.log(here);
             initMap();
         }
+
         function initMap() {
             console.log("attempting code");
-            
-            var map=new google.maps.Map(
-                document.getElementById('map'),{zoom:11,center:here});
-            var marker = new google.maps.Marker({position:here,map:map}); 
-            for (i in people){
-                marker=new google.maps.Marker({position:people[i].position,map:map});
+
+            var map = new google.maps.Map(
+                document.getElementById('map'), { zoom: 11, center: here });
+                //,icon:"http://www.clker.com/cliparts/H/Z/S/J/9/N/map-marker-md.png"
+            var marker = new google.maps.Marker({ position: here, map: map });
+            for (i in people) {
+                marker = new google.maps.Marker({ position: people[i].position, map: map });
             }
             console.log(marker);
         }
-        
     </script>
     <script async defer type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJdjJdhsUi4AM9lpSyKsb-L-iZf1YO0PQ&callback=initMap"></script>
     <script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
