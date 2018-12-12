@@ -2,13 +2,67 @@
 <html>
     
 <head>
+    <style>
+    div.body {
+    float: left;
+    padding: 5px;
+    font-size: 24px;
+    color: #7E8EA5;
+    width: 50%;
+    background-color: #C0ECAE;
+    }
+  </style>
+  
     <title>User Login and Sessions</title>
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
         
-<body>  
+<body style="background-color:#EDEDED">  
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '2232142970129836',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v3.2'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+   
+   
+FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+});
+</script>
+<div class="body">
+<p class="form-header" class="form-header" style="color:#EA4335; font-size:30px">Login</p>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=2232142970129836&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false">
+    
+</div>
+<p style="font-size:12px">(Facebook authentication coming soon!)<br>(... turns out it requires https)</p>
+
     <div class="form-container">
-        <p class="form-header">Login</p>
+        
         <form method="POST" action="/login">
             <label>Username:</label>
             <input type="text" id="username" name="username"><br>
@@ -18,6 +72,13 @@
         </form>
     </div>
     <a id="signUpLink" href="/signup">Sign Up</a>
+    
+        
+</div>
+    <img src="https://something2offer.com/wp-content/uploads/2016/11/T1D-Blue-Circle--1000x1000.png" 
+style="position: absolute; right: 20%; width: 20%; padding: 10px;">
+<img src="https://something2offer.com/wp-content/uploads/2016/11/T1D-Blue-Circle--1000x1000.png" 
+style="float: right; position: absolute; right: 10%; width: 20%; padding: 10px;">
     <hr>
     <span id="loginMsg">
     <%= msg %>
